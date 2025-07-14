@@ -5,8 +5,8 @@ import 'run_provider.dart';
 class ProgressHeader extends StatelessWidget {
   const ProgressHeader({super.key});
 
-  // TODO: Make this configurable
-  final int goalDays = 270;
+  // Annual running goal: 365 days
+  final int goalDays = 365;
 
   @override
   Widget build(BuildContext context) {
