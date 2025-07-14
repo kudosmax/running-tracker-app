@@ -12,46 +12,102 @@ class ProgressHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final runDays = context.select((RunProvider p) => p.runDates.length);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+    final progressPercentage = runDays / goalDays;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF1E293B).withOpacity(0.8),
+            const Color(0xFF334155).withOpacity(0.6),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFF4F46E5).withOpacity(0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4F46E5).withOpacity(0.1),
+            blurRadius: 20,
+            spreadRadius: 0,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          const Text(
-            'RUNNING GOAL',
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.2,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'ANNUAL GOAL',
+                style: TextStyle(
+                  color: Color(0xFF94A3B8),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.5,
+                ),
+              ),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [Color(0xFF4F46E5), Color(0xFF06B6D4)],
+                ).createShader(bounds),
+                child: RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 28,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    children: [
+                      TextSpan(text: '$runDays'),
+                      TextSpan(
+                        text: '/$goalDays',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white.withOpacity(0.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Container(
+            height: 6,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3),
+              color: const Color(0xFF334155),
+            ),
+            child: FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: progressPercentage.clamp(0.0, 1.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(3),
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF4F46E5), Color(0xFF06B6D4)],
+                  ),
+                ),
+              ),
             ),
           ),
-          RichText(
-            text: TextSpan(
-              style: const TextStyle(
-                fontSize: 22,
-                color: Colors.white,
-              ),
-              children: [
-                TextSpan(
-                  text: '$runDays',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFFFFA726), // Orange accent
-                  ),
-                ),
-                TextSpan(
-                  text: '/$goalDays',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    color: Colors.white.withOpacity(0.6),
-                  ),
-                ),
-              ],
+          const SizedBox(height: 8),
+          Text(
+            '${(progressPercentage * 100).toInt()}% Complete',
+            style: const TextStyle(
+              color: Color(0xFF94A3B8),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

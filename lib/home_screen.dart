@@ -15,20 +15,28 @@ class HomeScreen extends StatelessWidget {
     final isSmallScreen = screenHeight < 700;
     
     return Scaffold(
-      backgroundColor: const Color(0xFF1e1e1e),
+      backgroundColor: const Color(0xFF0A0E1A),
       appBar: AppBar(
-        title: const Text(
-          'Running Tracker',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontSize: 18,
+        title: ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFF4F46E5), Color(0xFF06B6D4)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ).createShader(bounds),
+          child: const Text(
+            'Running Tracker',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              fontSize: 22,
+              letterSpacing: -0.5,
+            ),
           ),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        toolbarHeight: isSmallScreen ? 50 : 56,
+        toolbarHeight: isSmallScreen ? 60 : 70,
       ),
       body: Consumer<RunProvider>(
         builder: (context, provider, child) {

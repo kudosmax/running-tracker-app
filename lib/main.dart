@@ -115,7 +115,38 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.orange,
-        scaffoldBackgroundColor: const Color(0xFF1e1e1e),
+        scaffoldBackgroundColor: const Color(0xFF0A0E1A),
+        fontFamily: 'SF Pro Display',
+        textTheme: const TextTheme(
+          headlineLarge: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            letterSpacing: -0.5,
+          ),
+          headlineMedium: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            letterSpacing: -0.3,
+          ),
+          bodyLarge: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+          bodyMedium: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Colors.white70,
+          ),
+        ),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFF4F46E5),
+          secondary: Color(0xFF06B6D4),
+          surface: Color(0xFF1E293B),
+          background: Color(0xFF0A0E1A),
+        ),
       ),
       home: const HomeScreen(),
     );

@@ -21,40 +21,73 @@ class LogRunButton extends StatelessWidget {
     return Container(
       width: actualWidth,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: FloatingActionButton.extended(
-        onPressed: provider.isLoading ? null : () {
-          // Add haptic feedback for iOS-like experience
-          // Call the provider method to toggle the run status
-          context.read<RunProvider>().toggleToday();
-        },
-        backgroundColor: isRunToday ? Colors.redAccent : const Color(0xFFFFA726),
-        elevation: 6,
-        extendedPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        icon: provider.isLoading 
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(28),
+          gradient: isRunToday
+              ? const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
+                )
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF4F46E5), Color(0xFF06B6D4)],
                 ),
-              )
-            : Icon(
-                isRunToday ? Icons.close : Icons.add,
-                color: Colors.white,
-                size: 20,
-              ),
-        label: Text(
-          isRunToday ? 'CANCEL TODAY\'S RUN' : 'LOG TODAY\'S RUN',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: screenWidth < 350 ? 13 : 14,
-            letterSpacing: 0.5,
-          ),
+          boxShadow: [
+            BoxShadow(
+              color: (isRunToday ? const Color(0xFFEF4444) : const Color(0xFF4F46E5))
+                  .withOpacity(0.3),
+              blurRadius: 20,
+              spreadRadius: 0,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: provider.isLoading ? null : () {
+              context.read<RunProvider>().toggleToday();
+            },
+            borderRadius: BorderRadius.circular(28),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (provider.isLoading)
+                    const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  else
+                    Icon(
+                      isRunToday ? Icons.close_rounded : Icons.add_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  const SizedBox(width: 12),
+                  Text(
+                    isRunToday ? 'REMOVE RUN' : 'LOG TODAY',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: screenWidth < 350 ? 14 : 16,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
