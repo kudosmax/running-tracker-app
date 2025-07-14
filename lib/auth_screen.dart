@@ -245,13 +245,23 @@ class _AuthScreenState extends State<AuthScreen> {
                           width: double.infinity,
                           child: OutlinedButton.icon(
                             onPressed: _isLoading ? null : _signInWithGoogle,
-                            icon: Image.asset(
-                              'assets/google_logo.png',
+                            icon: Container(
                               height: 20,
                               width: 20,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Icon(Icons.login, color: Colors.white);
-                              },
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'G',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
                             ),
                             label: const Text('Google로 계속하기'),
                             style: OutlinedButton.styleFrom(
@@ -266,7 +276,21 @@ class _AuthScreenState extends State<AuthScreen> {
                           width: double.infinity,
                           child: OutlinedButton.icon(
                             onPressed: _isLoading ? null : _signInWithGitHub,
-                            icon: const Icon(Icons.code, color: Colors.white),
+                            icon: Container(
+                              height: 20,
+                              width: 20,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black,
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.code,
+                                  color: Colors.white,
+                                  size: 14,
+                                ),
+                              ),
+                            ),
                             label: const Text('GitHub로 계속하기'),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.white,

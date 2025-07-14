@@ -55,34 +55,34 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDxKkBgXNQJgKKJXQJfKJXQJgKKJXQJfKJ',
-    appId: '1:123456789:android:abcdef123456',
-    messagingSenderId: '123456789',
+    apiKey: 'AIzaSyBUbheDp5A-znJfQM7Ecqg6unv9Ax9s6vQ',
+    appId: '1:563754587366:android:98d218777e394bcf425727',
+    messagingSenderId: '563754587366',
     projectId: 'run-tracker-c16ee',
     authDomain: 'run-tracker-c16ee.firebaseapp.com',
     databaseURL: 'https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'run-tracker-c16ee.appspot.com',
+    storageBucket: 'run-tracker-c16ee.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDxKkBgXNQJgKKJXQJfKJXQJgKKJXQJfKJ',
-    appId: '1:123456789:ios:abcdef123456',
-    messagingSenderId: '123456789',
+    apiKey: 'AIzaSyBUbheDp5A-znJfQM7Ecqg6unv9Ax9s6vQ',
+    appId: '1:563754587366:ios:98d218777e394bcf425727',
+    messagingSenderId: '563754587366',
     projectId: 'run-tracker-c16ee',
     authDomain: 'run-tracker-c16ee.firebaseapp.com',
     databaseURL: 'https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'run-tracker-c16ee.appspot.com',
+    storageBucket: 'run-tracker-c16ee.firebasestorage.app',
     iosBundleId: 'com.example.runningTracker',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDxKkBgXNQJgKKJXQJfKJXQJgKKJXQJfKJ',
-    appId: '1:123456789:macos:abcdef123456',
-    messagingSenderId: '123456789',
+    apiKey: 'AIzaSyBUbheDp5A-znJfQM7Ecqg6unv9Ax9s6vQ',
+    appId: '1:563754587366:macos:98d218777e394bcf425727',
+    messagingSenderId: '563754587366',
     projectId: 'run-tracker-c16ee',
     authDomain: 'run-tracker-c16ee.firebaseapp.com',
     databaseURL: 'https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'run-tracker-c16ee.appspot.com',
+    storageBucket: 'run-tracker-c16ee.firebasestorage.app',
     iosBundleId: 'com.example.runningTracker',
   );
 }

@@ -59,19 +59,29 @@ class AuthService with ChangeNotifier {
 
   Future<UserCredential?> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return null;
+      if (kIsWeb) {
+        // Use Firebase Auth popup for web
+        GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.addScope('email');
+        googleProvider.addScope('profile');
+        
+        return await _auth.signInWithPopup(googleProvider);
+      } else {
+        // Use Google Sign In for mobile
+        final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+        if (googleUser == null) {
+          return null;
+        }
+
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        return await _auth.signInWithCredential(credential);
       }
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      return await _auth.signInWithCredential(credential);
     } catch (e) {
       debugPrint('Google sign in error: $e');
       rethrow;
@@ -83,7 +93,7 @@ class AuthService with ChangeNotifier {
       GithubAuthProvider githubProvider = GithubAuthProvider();
       githubProvider.addScope('user:email');
       githubProvider.setCustomParameters({
-        'allow_signup': 'false',
+        'allow_signup': 'true',
       });
 
       if (kIsWeb) {
