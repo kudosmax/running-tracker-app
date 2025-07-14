@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: const Color(0xFF000000),
         body: Consumer<RunProvider>(
           builder: (context, provider, child) {
             if (provider.isLoading && provider.runDates.isEmpty) {

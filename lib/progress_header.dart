@@ -15,14 +15,25 @@ class ProgressHeader extends StatelessWidget {
     final daysLeft = goalDays - runDays;
 
     return Container(
-      padding: const EdgeInsets.all(28),
+      padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: const Color(0xFF111827),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: const Color(0xFF1F2937),
-          width: 1,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF8B5CF6),
+            Color(0xFF06B6D4),
+          ],
         ),
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF8B5CF6).withOpacity(0.3),
+            blurRadius: 20,
+            spreadRadius: 0,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,23 +45,28 @@ class ProgressHeader extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Annual Goal',
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     daysLeft > 0 ? '$daysLeft days to go' : 'Goal achieved! 🎉',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF8B5CF6), Color(0xFF06B6D4)],
-                  ),
+                  color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -68,28 +84,25 @@ class ProgressHeader extends StatelessWidget {
           const SizedBox(height: 24),
           
           // Progress display
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [Color(0xFF8B5CF6), Color(0xFF06B6D4)],
-            ).createShader(bounds),
-            child: RichText(
-              text: TextSpan(
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  color: Colors.white,
-                  height: 1.0,
-                ),
-                children: [
-                  TextSpan(text: runDays.toString()),
-                  TextSpan(
-                    text: ' / $goalDays',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white.withOpacity(0.4),
-                    ),
-                  ),
-                ],
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+                height: 1.0,
               ),
+              children: [
+                TextSpan(text: runDays.toString()),
+                TextSpan(
+                  text: ' / $goalDays',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white.withOpacity(0.7),
+                  ),
+                ),
+              ],
             ),
           ),
           
@@ -100,7 +113,7 @@ class ProgressHeader extends StatelessWidget {
             height: 8,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              color: const Color(0xFF1F2937),
+              color: Colors.white.withOpacity(0.3),
             ),
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
@@ -108,9 +121,7 @@ class ProgressHeader extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF8B5CF6), Color(0xFF06B6D4)],
-                  ),
+                  color: Colors.white,
                 ),
               ),
             ),

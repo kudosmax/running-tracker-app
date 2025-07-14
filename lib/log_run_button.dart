@@ -27,19 +27,19 @@ class LogRunButton extends StatelessWidget {
                 ? const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
+                    colors: [Color(0xFFFF6B6B), Color(0xFFFF8E53)],
                   )
                 : const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [Color(0xFF8B5CF6), Color(0xFF06B6D4)],
+                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
                   ),
             boxShadow: [
               BoxShadow(
                 color: (isRunToday 
-                    ? const Color(0xFFEF4444) 
-                    : const Color(0xFF8B5CF6)).withOpacity(0.4),
-                blurRadius: 24,
+                    ? const Color(0xFFFF6B6B) 
+                    : const Color(0xFF667EEA)).withOpacity(0.5),
+                blurRadius: 30,
                 spreadRadius: 0,
                 offset: const Offset(0, 12),
               ),
@@ -55,7 +55,7 @@ class LogRunButton extends StatelessWidget {
               },
               borderRadius: BorderRadius.circular(30),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.symmetric(vertical: 24),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

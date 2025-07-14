@@ -114,9 +114,9 @@ class MyApp extends StatelessWidget {
       title: 'Running Tracker',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true,
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF000000),
+        primaryColor: const Color(0xFF8B5CF6),
         fontFamily: 'SF Pro Display',
         textTheme: const TextTheme(
           displayLarge: TextStyle(
