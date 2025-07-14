@@ -24,8 +24,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Migrate legacy data to escriboy account
-  await DataMigrationService.migrateLegacyDataToUser();
+  // Note: Legacy data migration will be handled after Firebase Auth is ready
 
   runApp(
     MultiProvider(

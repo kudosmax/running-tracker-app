@@ -1,17 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'data_migration_service.dart';
 
 class AuthService with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   User? _user;
+  bool _hasRunMigration = false;
 
   AuthService() {
     _auth.authStateChanges().listen((User? user) {
       _user = user;
       notifyListeners();
+      
+      // Run legacy data migration once when Firebase Auth is ready
+      if (!_hasRunMigration) {
+        _hasRunMigration = true;
+        _runLegacyMigration();
+      }
     });
+  }
+
+  Future<void> _runLegacyMigration() async {
+    try {
+      await DataMigrationService.migrateLegacyDataToUser();
+    } catch (e) {
+      debugPrint('Legacy migration error: $e');
+    }
   }
 
   User? get currentUser => _user;
