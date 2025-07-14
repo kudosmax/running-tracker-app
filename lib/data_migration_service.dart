@@ -8,7 +8,7 @@ class DataMigrationService {
   static const String _firebaseBaseUrl = 'https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app';
   
   // escriboy 계정의 가상 UID (실제 Firebase Auth UID가 아닌 임시 ID)
-  static const String _legacyUserId = 'legacy_user_escriboy_wjrma7675949';
+  static const String _legacyUserId = 'legacy_user_escriboy_temp123456789';
   
   /// 기존 Scriptable 데이터를 특정 사용자에게 마이그레이션
   static Future<void> migrateLegacyDataToUser() async {
@@ -22,7 +22,7 @@ class DataMigrationService {
     }
 
     try {
-      debugPrint("🔄 Starting legacy data migration to escriboy account...");
+      debugPrint("🔄 Starting legacy data migration to legacy account...");
       
       // Scriptable JSON 데이터 로드
       final String jsonString = await rootBundle.loadString('assets/running-log.json');
@@ -123,7 +123,7 @@ class DataMigrationService {
       final metadata = {
         'userId': _legacyUserId,
         'displayName': 'escriboy',
-        'email': 'wjrma7675949@legacy.com',
+        'email': 'temp123456789@legacy.com',
         'isLegacyAccount': true,
         'totalRuns': totalRuns,
         'createdAt': DateTime.now().toIso8601String(),
