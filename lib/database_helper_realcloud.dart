@@ -7,8 +7,8 @@ class DatabaseHelper {
   factory DatabaseHelper() => _instance;
   DatabaseHelper._internal();
 
-  // Firebase Realtime Database REST API (인증 없이 사용 가능)
-  static const String _firebaseUrl = 'https://running-tracker-demo-default-rtdb.firebaseio.com/runs.json';
+  // Firebase Realtime Database REST API
+  static const String _firebaseUrl = 'https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app/runs.json';
   
   List<String> _cachedRuns = [];
   DateTime? _lastFetch;
@@ -155,7 +155,7 @@ class DatabaseHelper {
   Future<bool> isCloudConnected() async {
     try {
       final response = await http.get(
-        Uri.parse('https://running-tracker-demo-default-rtdb.firebaseio.com/.json'),
+        Uri.parse('https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app/.json'),
       ).timeout(const Duration(seconds: 5));
       return response.statusCode == 200;
     } catch (e) {
