@@ -7,167 +7,170 @@ class DatabaseHelper {
   factory DatabaseHelper() => _instance;
   DatabaseHelper._internal();
 
-  // 실제 클라우드 JSON 저장소 (jsonbin.io)
-  static const String _binId = '67442e39e41b4d34e457d278'; // Demo bin
-  static const String _apiUrl = 'https://api.jsonbin.io/v3/b/$_binId';
-  static const String _readUrl = 'https://api.jsonbin.io/v3/b/$_binId/latest';
+  // Firebase Realtime Database REST API (인증 없이 사용 가능)
+  static const String _firebaseUrl = 'https://running-tracker-demo-default-rtdb.firebaseio.com/runs.json';
   
-  // API 키 (실제 운영에서는 환경변수 사용)
-  static const String _apiKey = '\$2a\$10\$KLdAHKMZAV85hYoovyFaFujl0Xd4TlYGGtRZmdfKqOFNrm3t2P2k2';
-
   List<String> _cachedRuns = [];
   DateTime? _lastFetch;
 
-  // 클라우드에서 데이터 가져오기
-  Future<List<String>> _fetchFromCloud() async {
+  // Firebase에서 데이터 가져오기
+  Future<List<String>> _fetchFromFirebase() async {
     try {
-      print('🔍 Fetching data from cloud...');
+      print('🔥 Fetching data from Firebase...');
       
       final response = await http.get(
-        Uri.parse(_readUrl),
+        Uri.parse(_firebaseUrl),
         headers: {
-          'X-Master-Key': _apiKey,
           'Content-Type': 'application/json',
         },
       ).timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data['record'] != null && data['record']['runs'] != null) {
-          final List<dynamic> runsList = data['record']['runs'];
-          _cachedRuns = runsList.cast<String>();
+        if (data != null && data is List) {
+          final List<String> runs = data.cast<String>();
+          _cachedRuns = runs;
           _lastFetch = DateTime.now();
-          print('✅ Loaded ${_cachedRuns.length} runs from cloud');
-          return _cachedRuns;
+          print('✅ Loaded ${runs.length} runs from Firebase');
+          return runs;
+        } else if (data != null && data is Map) {
+          // Firebase가 객체로 반환하는 경우
+          final List<String> runs = data.values.toList().cast<String>();
+          _cachedRuns = runs;
+          _lastFetch = DateTime.now();
+          print('✅ Loaded ${runs.length} runs from Firebase (object format)');
+          return runs;
         }
       } else {
-        print('❌ Cloud fetch failed: ${response.statusCode}');
-        print('Response: ${response.body}');
+        print('❌ Firebase fetch failed: ${response.statusCode}');
       }
     } catch (e) {
-      print('❌ Cloud fetch error: $e');
+      print('❌ Firebase fetch error: $e');
     }
     
-    // 캐시된 데이터가 있으면 반환
-    if (_cachedRuns.isNotEmpty) {
-      print('📦 Using cached data (${_cachedRuns.length} runs)');
-      return _cachedRuns;
-    }
-    
+    // 실패 시 빈 배열 반환
+    _cachedRuns = [];
     return [];
   }
 
-  // 클라우드에 데이터 저장
-  Future<bool> _saveToCloud(List<String> runs) async {
+  // Firebase에 데이터 저장
+  Future<bool> _saveToFirebase(List<String> runs) async {
     try {
-      print('☁️ Saving ${runs.length} runs to cloud...');
+      print('🔥 Saving ${runs.length} runs to Firebase...');
       
       final response = await http.put(
-        Uri.parse(_apiUrl),
+        Uri.parse(_firebaseUrl),
         headers: {
-          'X-Master-Key': _apiKey,
           'Content-Type': 'application/json',
         },
-        body: json.encode({
-          'runs': runs,
-          'lastUpdated': DateTime.now().toIso8601String(),
-          'totalRuns': runs.length,
-        }),
+        body: json.encode(runs),
       ).timeout(const Duration(seconds: 15));
 
       if (response.statusCode == 200) {
         _cachedRuns = runs;
         _lastFetch = DateTime.now();
-        print('✅ Successfully saved to cloud');
+        print('✅ Successfully saved to Firebase');
         return true;
       } else {
-        print('❌ Cloud save failed: ${response.statusCode}');
+        print('❌ Firebase save failed: ${response.statusCode}');
         print('Response: ${response.body}');
         return false;
       }
     } catch (e) {
-      print('❌ Cloud save error: $e');
+      print('❌ Firebase save error: $e');
       return false;
     }
   }
 
-  // 스마트 캐싱 (5분 내 데이터는 캐시 사용)
-  Future<List<String>> _getRunsFromCloud() async {
+  // 스마트 캐싱 (2분 내 데이터는 캐시 사용)
+  Future<List<String>> _getRuns() async {
     final now = DateTime.now();
     
-    // 캐시가 5분 이내면 캐시 사용
+    // 캐시가 2분 이내면 캐시 사용
     if (_lastFetch != null && 
-        now.difference(_lastFetch!).inMinutes < 5 && 
+        now.difference(_lastFetch!).inMinutes < 2 && 
         _cachedRuns.isNotEmpty) {
       print('⚡ Using fresh cache (${_cachedRuns.length} runs)');
       return _cachedRuns;
     }
     
-    // 아니면 클라우드에서 새로 가져오기
-    return await _fetchFromCloud();
+    // Firebase에서 최신 데이터 가져오기
+    return await _fetchFromFirebase();
   }
 
   // --- CRUD Operations ---
 
   Future<void> addRun(String date) async {
-    final runs = await _getRunsFromCloud();
+    final runs = await _getRuns();
     if (!runs.contains(date)) {
       runs.add(date);
       runs.sort();
-      final success = await _saveToCloud(runs);
+      final success = await _saveToFirebase(runs);
       if (success) {
         print('➕ Added run: $date');
       } else {
         print('❌ Failed to add run: $date');
+        throw Exception('Failed to save to Firebase');
       }
     }
   }
 
   Future<void> deleteRun(String date) async {
-    final runs = await _getRunsFromCloud();
+    final runs = await _getRuns();
     if (runs.remove(date)) {
-      final success = await _saveToCloud(runs);
+      final success = await _saveToFirebase(runs);
       if (success) {
         print('➖ Removed run: $date');
       } else {
         print('❌ Failed to remove run: $date');
+        throw Exception('Failed to save to Firebase');
       }
     }
   }
 
   Future<List<String>> getRuns() async {
-    final runs = await _getRunsFromCloud();
+    final runs = await _getRuns();
     runs.sort((a, b) => b.compareTo(a)); // Sort descending (newest first)
     return runs;
   }
 
   Future<bool> runExists(String date) async {
-    final runs = await _getRunsFromCloud();
+    final runs = await _getRuns();
     return runs.contains(date);
   }
 
   Future<bool> isDatabaseEmpty() async {
-    final runs = await _getRunsFromCloud();
+    final runs = await _getRuns();
     return runs.isEmpty;
   }
 
-  // 강제 새로고침 (캐시 무시하고 클라우드에서 최신 데이터 가져오기)
+  // 강제 새로고침
   Future<void> forceRefresh() async {
     _lastFetch = null;
     _cachedRuns.clear();
-    await _fetchFromCloud();
+    await _fetchFromFirebase();
   }
 
   // 연결 상태 확인
   Future<bool> isCloudConnected() async {
     try {
       final response = await http.get(
-        Uri.parse('https://api.jsonbin.io/v3/'),
-        headers: {'X-Master-Key': _apiKey},
+        Uri.parse('https://running-tracker-demo-default-rtdb.firebaseio.com/.json'),
       ).timeout(const Duration(seconds: 5));
       return response.statusCode == 200;
     } catch (e) {
       return false;
     }
+  }
+
+  // 데이터 내보내기
+  String exportData() {
+    return json.encode({
+      'app': 'Running Tracker',
+      'version': '1.0.0',
+      'exported': DateTime.now().toIso8601String(),
+      'runs': _cachedRuns,
+      'totalRuns': _cachedRuns.length,
+    });
   }
 }
