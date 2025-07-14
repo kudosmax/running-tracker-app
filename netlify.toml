@@ -1,6 +1,9 @@
 [build]
   publish = "build/web"
-  command = "echo 'Using pre-built files'"
+  command = "bash build.sh"
+
+[build.environment]
+  FLUTTER_VERSION = "3.24.0"
 
 [[redirects]]
   from = "/*"
