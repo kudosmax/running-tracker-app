@@ -44,14 +44,14 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDxKkBgXNQJgKKJXQJfKJXQJgKKJXQJfKJ',
-    appId: '1:123456789:web:abcdef123456',
-    messagingSenderId: '123456789',
+    apiKey: 'AIzaSyBUbheDp5A-znJfQM7Ecqg6unv9Ax9s6vQ',
+    appId: '1:563754587366:web:98d218777e394bcf425727',
+    messagingSenderId: '563754587366',
     projectId: 'run-tracker-c16ee',
     authDomain: 'run-tracker-c16ee.firebaseapp.com',
     databaseURL: 'https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'run-tracker-c16ee.appspot.com',
-    measurementId: 'G-MEASUREMENT_ID',
+    storageBucket: 'run-tracker-c16ee.firebasestorage.app',
+    measurementId: 'G-VSYXH9LGTP',
   );
 
   static const FirebaseOptions android = FirebaseOptions(

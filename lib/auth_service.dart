@@ -44,10 +44,6 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<void> signOut() async {
-    await _auth.signOut();
-  }
-
   Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
