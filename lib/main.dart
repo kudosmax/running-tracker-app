@@ -13,6 +13,7 @@ import 'home_screen.dart';
 import 'run_provider.dart';
 import 'auth_service.dart';
 import 'auth_screen.dart';
+import 'data_migration_service.dart';
 
 Future<void> main() async {
   // Ensure that Flutter bindings are initialized
@@ -23,7 +24,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Note: Data migration will be handled after user logs in
+  // Migrate legacy data to escriboy account
+  await DataMigrationService.migrateLegacyDataToUser();
 
   runApp(
     MultiProvider(

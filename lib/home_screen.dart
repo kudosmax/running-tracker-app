@@ -6,6 +6,7 @@ import 'progress_header.dart';
 import 'run_heatmap.dart';
 import 'run_provider.dart';
 import 'auth_service.dart';
+import 'admin_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -49,9 +50,25 @@ class HomeScreen extends StatelessWidget {
                         if (value == 'logout') {
                           final authService = Provider.of<AuthService>(context, listen: false);
                           await authService.signOut();
+                        } else if (value == 'admin') {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const AdminScreen(),
+                            ),
+                          );
                         }
                       },
                       itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'admin',
+                          child: Row(
+                            children: [
+                              Icon(Icons.admin_panel_settings, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text('관리자 모드'),
+                            ],
+                          ),
+                        ),
                         const PopupMenuItem(
                           value: 'logout',
                           child: Row(
