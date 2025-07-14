@@ -7,91 +7,128 @@ class RunHeatmap extends StatelessWidget {
   const RunHeatmap({super.key});
 
   final int daysToDisplay = 365;
-  final int columns = 26; // 365일을 더 잘 표시하기 위해 26열로 증가
+  final int columns = 24;
 
-  // --- Appearance ---
-  static const Color colorUnfilled = Color(0xFF1E293B);
-  static const Color colorLowActivity = Color(0xFF4F46E5);
-  static const Color colorMediumActivity = Color(0xFF7C3AED);
-  static const Color colorHighActivity = Color(0xFF06B6D4);
+  // Modern color scheme
+  static const Color colorUnfilled = Color(0xFF1F2937);
+  static const Color colorFilled = Color(0xFF8B5CF6);
 
   @override
   Widget build(BuildContext context) {
     final runDates = context.watch<RunProvider>().runDates;
     final today = DateTime.now();
-    final screenWidth = MediaQuery.of(context).size.width;
     
-    // Adjust columns based on screen width for 365-day heatmap
-    final adaptiveColumns = screenWidth < 350 ? 20 : (screenWidth < 400 ? 22 : columns);
-    final spacing = screenWidth < 350 ? 2.5 : (screenWidth < 400 ? 3.0 : 3.5);
-
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double boxSize = (constraints.maxWidth - (adaptiveColumns - 1) * spacing) / adaptiveColumns;
-        final double clampedBoxSize = boxSize.clamp(6.0, 16.0); // Smaller boxes for 365 days
+        final spacing = 3.0;
+        final boxSize = (constraints.maxWidth - (columns - 1) * spacing) / columns;
+        final clampedBoxSize = boxSize.clamp(8.0, 18.0);
 
-        return GridView.builder(
-          physics: const BouncingScrollPhysics(), // iOS-style scrolling
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: adaptiveColumns,
-            crossAxisSpacing: spacing,
-            mainAxisSpacing: spacing,
-            childAspectRatio: 1.0,
-          ),
-          itemCount: daysToDisplay,
-          itemBuilder: (context, index) {
-            final date = today.subtract(Duration(days: daysToDisplay - 1 - index));
-            final dateString = DateFormat('yyyy-MM-dd').format(date);
-            final isRunDay = runDates.contains(dateString);
-
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: clampedBoxSize,
-              height: clampedBoxSize,
-              decoration: BoxDecoration(
-                gradient: isRunDay 
-                    ? const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [colorLowActivity, colorHighActivity],
-                      )
-                    : null,
-                color: isRunDay ? null : colorUnfilled,
-                borderRadius: BorderRadius.circular(screenWidth < 350 ? 2.0 : 3.0),
-                border: isRunDay 
-                    ? Border.all(
-                        color: colorHighActivity.withOpacity(0.3),
-                        width: 0.5,
-                      )
-                    : null,
-                boxShadow: isRunDay 
-                    ? [
-                        BoxShadow(
-                          color: colorHighActivity.withOpacity(0.3),
-                          blurRadius: 4,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 2),
-                        )
-                      ] 
-                    : null,
-              ),
-              child: isRunDay
-                  ? Container(
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Legend
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Row(
+                children: [
+                  Text(
+                    'Less',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ...List.generate(5, (index) {
+                    return Container(
+                      margin: const EdgeInsets.only(right: 2),
+                      width: 10,
+                      height: 10,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(screenWidth < 350 ? 2.0 : 3.0),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Colors.white.withOpacity(0.1),
-                            Colors.transparent,
-                          ],
-                        ),
+                        color: index == 0 
+                            ? colorUnfilled 
+                            : colorFilled.withOpacity(0.2 + (index * 0.2)),
+                        borderRadius: BorderRadius.circular(2),
                       ),
-                    )
-                  : null,
-            );
-          },
+                    );
+                  }),
+                  const SizedBox(width: 8),
+                  Text(
+                    'More',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Heatmap
+            Expanded(
+              child: GridView.builder(
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columns,
+                  crossAxisSpacing: spacing,
+                  mainAxisSpacing: spacing,
+                  childAspectRatio: 1.0,
+                ),
+                itemCount: daysToDisplay,
+                itemBuilder: (context, index) {
+                  final date = today.subtract(Duration(days: daysToDisplay - 1 - index));
+                  final dateString = DateFormat('yyyy-MM-dd').format(date);
+                  final isRunDay = runDates.contains(dateString);
+                  final isToday = DateFormat('yyyy-MM-dd').format(today) == dateString;
+
+                  return GestureDetector(
+                    onTap: () {
+                      // Optional: Show date tooltip
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            isRunDay 
+                                ? 'Ran on ${DateFormat('MMM d').format(date)}' 
+                                : 'No run on ${DateFormat('MMM d').format(date)}',
+                          ),
+                          duration: const Duration(seconds: 1),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      );
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: clampedBoxSize,
+                      height: clampedBoxSize,
+                      decoration: BoxDecoration(
+                        color: isRunDay ? colorFilled : colorUnfilled,
+                        borderRadius: BorderRadius.circular(4),
+                        border: isToday 
+                            ? Border.all(
+                                color: Colors.white.withOpacity(0.6),
+                                width: 2,
+                              )
+                            : null,
+                        boxShadow: isRunDay 
+                            ? [
+                                BoxShadow(
+                                  color: colorFilled.withOpacity(0.3),
+                                  blurRadius: 4,
+                                  spreadRadius: 0,
+                                  offset: const Offset(0, 2),
+                                )
+                              ] 
+                            : null,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         );
       },
     );

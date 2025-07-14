@@ -112,23 +112,41 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Running Tracker',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: true,
         brightness: Brightness.dark,
-        primarySwatch: Colors.orange,
-        scaffoldBackgroundColor: const Color(0xFF0A0E1A),
+        scaffoldBackgroundColor: const Color(0xFF000000),
         fontFamily: 'SF Pro Display',
         textTheme: const TextTheme(
-          headlineLarge: TextStyle(
+          displayLarge: TextStyle(
+            fontSize: 40,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+            letterSpacing: -1.2,
+          ),
+          displayMedium: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.w700,
+            color: Colors.white,
+            letterSpacing: -0.8,
+          ),
+          headlineLarge: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
             color: Colors.white,
             letterSpacing: -0.5,
           ),
           headlineMedium: TextStyle(
-            fontSize: 24,
+            fontSize: 22,
             fontWeight: FontWeight.w600,
             color: Colors.white,
             letterSpacing: -0.3,
+          ),
+          titleLarge: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
           bodyLarge: TextStyle(
             fontSize: 16,
@@ -138,14 +156,43 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: Colors.white70,
+            color: Color(0xFF94A3B8),
+          ),
+          labelLarge: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            letterSpacing: 0.1,
           ),
         ),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF4F46E5),
+          brightness: Brightness.dark,
+          primary: Color(0xFF8B5CF6),
+          onPrimary: Colors.white,
           secondary: Color(0xFF06B6D4),
-          surface: Color(0xFF1E293B),
-          background: Color(0xFF0A0E1A),
+          onSecondary: Colors.white,
+          surface: Color(0xFF111827),
+          onSurface: Colors.white,
+          background: Color(0xFF000000),
+          onBackground: Colors.white,
+          error: Color(0xFFEF4444),
+          onError: Colors.white,
+        ),
+        cardTheme: CardTheme(
+          elevation: 0,
+          color: const Color(0xFF111827),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
         ),
       ),
       home: const HomeScreen(),
