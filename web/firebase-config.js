@@ -1,12 +1,13 @@
 // Firebase configuration for web
-// This is a demo configuration - you'll need to replace with your own
 const firebaseConfig = {
-  apiKey: "demo-api-key",
-  authDomain: "running-tracker-demo.firebaseapp.com",
-  projectId: "running-tracker-demo",
-  storageBucket: "running-tracker-demo.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef123456"
+  apiKey: "AIzaSyBUbheDp5A-znJfQM7Ecqg6unv9Ax9s6vQ",
+  authDomain: "run-tracker-c16ee.firebaseapp.com",
+  databaseURL: "https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "run-tracker-c16ee",
+  storageBucket: "run-tracker-c16ee.firebasestorage.app",
+  messagingSenderId: "563754587366",
+  appId: "1:563754587366:web:98d218777e394bcf425727",
+  measurementId: "G-VSYXH9LGTP"
 };
 
 // Initialize Firebase (will be done from Flutter)
