@@ -5,21 +5,32 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'database_helper.dart';
 import 'home_screen.dart';
 import 'run_provider.dart';
+import 'auth_service.dart';
+import 'auth_screen.dart';
 
 Future<void> main() async {
   // Ensure that Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-  // Run the data migration if it's the first launch
-  await _migrateDataIfNeeded();
+  // Note: Data migration will be handled after user logs in
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => RunProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => RunProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -195,7 +206,15 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const HomeScreen(),
+      home: Consumer<AuthService>(
+        builder: (context, authService, child) {
+          if (authService.isLoggedIn) {
+            return const HomeScreen();
+          } else {
+            return const AuthScreen();
+          }
+        },
+      ),
     );
   }
 }

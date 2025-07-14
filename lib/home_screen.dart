@@ -5,6 +5,7 @@ import 'log_run_button.dart';
 import 'progress_header.dart';
 import 'run_heatmap.dart';
 import 'run_provider.dart';
+import 'auth_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -41,6 +42,29 @@ class HomeScreen extends StatelessWidget {
                   pinned: true,
                   backgroundColor: Colors.black,
                   elevation: 0,
+                  actions: [
+                    PopupMenuButton<String>(
+                      icon: const Icon(Icons.more_vert, color: Colors.white),
+                      onSelected: (value) async {
+                        if (value == 'logout') {
+                          final authService = Provider.of<AuthService>(context, listen: false);
+                          await authService.signOut();
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'logout',
+                          child: Row(
+                            children: [
+                              Icon(Icons.logout, color: Colors.white),
+                              SizedBox(width: 8),
+                              Text('로그아웃'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   flexibleSpace: FlexibleSpaceBar(
                     title: ShaderMask(
                       shaderCallback: (bounds) => const LinearGradient(

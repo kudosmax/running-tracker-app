@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -8,7 +9,15 @@ class DatabaseHelper {
   DatabaseHelper._internal();
 
   // Firebase Realtime Database REST API
-  static const String _firebaseUrl = 'https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app/runs.json';
+  static const String _firebaseBaseUrl = 'https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app';
+  
+  String get _firebaseUrl {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User not authenticated');
+    }
+    return '$_firebaseBaseUrl/users/${user.uid}/runs.json';
+  }
   
   List<String> _cachedRuns = [];
   DateTime? _lastFetch;
@@ -154,8 +163,11 @@ class DatabaseHelper {
   // 연결 상태 확인
   Future<bool> isCloudConnected() async {
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return false;
+      
       final response = await http.get(
-        Uri.parse('https://run-tracker-c16ee-default-rtdb.asia-southeast1.firebasedatabase.app/.json'),
+        Uri.parse('$_firebaseBaseUrl/.json'),
       ).timeout(const Duration(seconds: 5));
       return response.statusCode == 200;
     } catch (e) {
