@@ -12,8 +12,8 @@ class RunProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   RunProvider() {
-    // Load initial data when the provider is created
-    loadRuns();
+    // Data will be loaded when user logs in
+    // No initial loading to prevent Firebase auth errors
   }
 
   /// Loads all run dates from the database and updates the state.

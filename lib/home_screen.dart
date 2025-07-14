@@ -8,8 +8,32 @@ import 'run_provider.dart';
 import 'auth_service.dart';
 import 'admin_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _hasLoadedData = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load data when screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadDataIfNeeded();
+    });
+  }
+
+  void _loadDataIfNeeded() {
+    if (!_hasLoadedData) {
+      _hasLoadedData = true;
+      final runProvider = Provider.of<RunProvider>(context, listen: false);
+      runProvider.loadRuns();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
