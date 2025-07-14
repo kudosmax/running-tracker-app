@@ -41,11 +41,10 @@ dependencies:
   provider: ^6.1.5
   intl: ^0.20.2
   shared_preferences: ^2.3.3
-  # Firebase
-  firebase_core: ^2.24.2
-  cloud_firestore: ^4.13.6
   # HTTP for cloud storage
   http: ^1.1.0
+  # Supabase for real-time cloud database
+  supabase_flutter: ^2.3.4
 
 dev_dependencies:
   flutter_test:
